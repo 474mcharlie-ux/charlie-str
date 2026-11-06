@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Account Dashboard (Demo)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💳</text></svg>">
+<style>
+:root{
+  --bg:#f6f9fc;--surface:#fff;--text:#1a1f36;--muted:#697386;--line:#e3e8ee;
+  --brand:#635bff;--brand-d:#4b44d6;--ok:#0e9f6e;--okbg:#e3f8ee;--warn:#fff4d6;--warnt:#7a5600;--pend:#b7791f;--pendbg:#fff4d6;
+  color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1224;--surface:#171d33;--text:#e8ebf5;--muted:#9aa3bd;--line:#2a3150;
+    --brand:#8b85ff;--brand-d:#a39eff;--ok:#3ddc97;--okbg:#12352b;--warn:#3a2f10;--warnt:#f3d58a;--pend:#f3d58a;--pendbg:#3a2f10;color-scheme:dark;
+  }
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.demo{background:var(--warn);color:var(--warnt);text-align:center;font-size:12.5px;padding:7px 12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:20px;color:var(--brand);letter-spacing:-.5px}
+.user{display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;letter-spacing:.4px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px}
+main{max-width:920px;margin:0 auto;padding:24px 16px 48px;display:grid;gap:18px}
+h1{font-size:22px;margin:0}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(20,24,50,.05)}
+.label{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.balance{font-size:40px;font-weight:700;letter-spacing:-1px;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:10px 0 4px;max-width:100%}
+.seg button{border:0;background:transparent;color:var(--muted);padding:7px 14px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--brand);color:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{background:var(--okbg);color:var(--ok);font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.chip.n{background:var(--bg);color:var(--muted)}
+.chip.p{background:var(--pendbg);color:var(--pend)}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;font-size:16px}
+input:focus,select:focus{outline:2px solid var(--brand)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result{margin-top:16px;padding:14px;border-radius:10px;background:var(--bg);border:1px dashed var(--line)}
+.result .big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.btn{margin-top:14px;width:100%;border:0;border-radius:8px;background:var(--brand);color:#fff;padding:11px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.btn:hover{background:var(--brand-d)}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line);margin-top:8px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.neg{color:var(--text)}.pos{color:var(--ok)}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.msg{margin-top:12px;font-size:13px;padding:10px 12px;border-radius:8px;display:none}
+.msg.err{display:block;background:#fde8e8;color:#9b1c1c}
+.msg.ok{display:block;background:var(--okbg);color:var(--ok)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">payments<span style="color:var(--muted);font-weight:500"> · dashboard</span></div>
+  <div class="user"><span>CHARLES OTIENO</span><div class="avatar">CO</div></div>
+</header>
+<main>
+  <div>
+    <h1>Welcome back, CHARLES OTIENO</h1>
+    <div class="sub">Account overview · Standard account</div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="label">Available balance</div>
+      <div class="balance" id="bal">$3,201.00</div>
+      <div class="sub" id="balsub">USD · United States dollar</div>
+      <div class="seg" role="group" aria-label="Display currency">
+        <button id="bUSD" class="on" type="button">USD</button>
+        <button id="bKES" type="button">KES</button>
+      </div>
+      <div class="chips"><span class="chip">● Active</span><span class="chip n">Payouts: Daily</span></div>
+      <div class="note" id="rateNote">Rate: 1 USD = 129.30 KES</div>
+    </section>
+
+    <section class="card">
+      <div class="label">Currency converter</div>
+      <div class="row">
+        <div><label for="amt" id="amtL">Amount (USD)</label><input id="amt" type="number" inputmode="decimal" min="0" step="0.01" value="3201"></div>
+        <div><label for="rate">Rate (KES per USD)</label><input id="rate" type="number" inputmode="decimal" min="0" step="0.01" value="129.30"></div>
+      </div>
+      <div class="result"><div class="sub">You receive</div><div class="big" id="out">KSh 0.00</div></div>
+      <button class="btn" id="all" type="button">Convert full balance</button>
+      <button class="btn ghost" id="swap" type="button">Swap direction (KES → USD)</button>
+      <div class="note">Rate based on the mid-market rate around 129.3 KES/USD at the time of building. Edit it to match your current rate.</div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="label">Withdraw funds</div>
+    <div class="seg" role="group" aria-label="Withdrawal method">
+      <button type="button" class="on" data-m="mpesa">M-Pesa</button>
+      <button type="button" data-m="bank">Bank</button>
+      <button type="button" data-m="crypto">Crypto</button>
+    </div>
+    <div class="row">
+      <div><label for="wamt">Amount (USD)</label><input id="wamt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"></div>
+      <div><label>You receive (approx.)</label><input id="wout" type="text" readonly value="—"></div>
+    </div>
+
+    <div id="f-mpesa">
+      <label for="phone">M-Pesa phone number</label>
+      <input id="phone" type="tel" inputmode="tel" placeholder="07XX XXX XXX">
+    </div>
+    <div id="f-bank" class="hide">
+      <div class="row">
+        <div><label for="bname">Bank</label>
+          <select id="bname"><option>Equity Bank</option><option>KCB</option><option>Co-operative Bank</option><option>NCBA</option><option>Absa Kenya</option><option>Stanbic</option></select></div>
+        <div><label for="bacc">Account number</label><input id="bacc" type="text" inputmode="numeric" placeholder="Account number"></div>
+      </div>
+    </div>
+    <div id="f-crypto" class="hide">
+      <div class="row">
+        <div><label for="coin">Coin</label>
+          <select id="coin"><option value="USDT">USDT (TRC-20)</option><option value="USDC">USDC (ERC-20)</option><option value="BTC">Bitcoin</option><option value="ETH">Ethereum</option></select></div>
+        <div><label for="addr">Wallet address</label><input id="addr" type="text" placeholder="Paste address"></div>
+      </div>
+    </div>
+
+    <button class="btn" id="wbtn" type="button">Withdraw</button>
+    <div class="msg" id="wmsg" role="status"></div>
+  </section>
+
+  <section class="card">
+    <div class="label" style="margin-bottom:8px">Recent activity</div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Description</th><th>Status</th><th class="r">Amount</th></tr></thead>
+        <tbody id="tx"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var fmt=function(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+  var num=function(el){var v=parseFloat(el.value);return isNaN(v)||v<0?0:v};
+  var bal=3201, usdToKes=true, method='mpesa', dispKes=false;
+
+  /* ---- sample ledger: deposits 4300, withdrawals 1099 => 3201 ---- */
+  var items=[
+    {t:'in',d:'Payment received',a:1200},{t:'in',d:'Payment received',a:950},{t:'in',d:'Payment received',a:850},
+    {t:'in',d:'Payment received',a:700},{t:'in',d:'Payment received',a:600},
+    {t:'out',d:'Withdrawal to M-Pesa ••• 4417',a:450},
+    {t:'out',d:'Withdrawal to Equity Bank •••• 8203',a:400},
+    {t:'out',d:'Withdrawal to USDT wallet 0x…a9F2',a:249}
+  ];
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+  function build(){
+    var list,ok=false,tries=0;
+    while(!ok&&tries++<200){
+      list=shuffle(items.slice());
+      var run=0;ok=true;
+      for(var i=list.length-1;i>=0;i--){run+=list[i].t==='in'?list[i].a:-list[i].a;if(run<0){ok=false;break}}
+    }
+    /* list[0] is newest; walk back with random gaps of 5-14 days */
+    var day=new Date();day.setHours(12,0,0,0);
+    var back=2+Math.floor(Math.random()*4);
+    list.forEach(function(x,i){
+      if(i>0)back+=5+Math.floor(Math.random()*10);
+      var d=new Date(day.getTime()-back*86400000);x.date=d;
+    });
+    return list;
+  }
+  var ledger=build();
+  var dfmt=function(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+  function row(x){
+    var pend=x.pending;
+    return '<tr><td>'+dfmt(x.date)+'</td><td>'+x.d+'</td><td><span class="chip'+(pend?' p':'')+'">'+(pend?'Pending':'Succeeded')+'</span></td>'+
+      '<td class="r '+(x.t==='in'?'pos':'neg')+'">'+(x.t==='in'?'+':'−')+'$'+fmt(x.a)+'</td></tr>';
+  }
+  function render(){$('tx').innerHTML=ledger.map(row).join('')}
+
+  /* ---- balance + converter ---- */
+  function update(){
+    var r=num($('rate')),a=num($('amt'));
+    $('out').textContent=usdToKes?'KSh '+fmt(a*r):'$'+fmt(r?a/r:0);
+    $('rateNote').textContent='Rate: 1 USD = '+fmt(r)+' KES';
+    if(dispKes){$('bal').textContent='KSh '+fmt(bal*r);$('balsub').textContent='KES · Kenyan shilling (converted)'}
+    else{$('bal').textContent='$'+fmt(bal);$('balsub').textContent='USD · United States dollar'}
+    quote();
+  }
+  function setDisp(k){dispKes=k;$('bKES').classList.toggle('on',k);$('bUSD').classList.toggle('on',!k);update()}
+  $('bUSD').onclick=function(){setDisp(false)};
+  $('bKES').onclick=function(){setDisp(true)};
+  $('amt').oninput=update;$('rate').oninput=update;
+  $('all').onclick=function(){usdToKes=true;$('amtL').textContent='Amount (USD)';$('swap').textContent='Swap direction (KES → USD)';$('amt').value=bal;update()};
+  $('swap').onclick=function(){
+    usdToKes=!usdToKes;
+    $('amtL').textContent=usdToKes?'Amount (USD)':'Amount (KES)';
+    $('swap').textContent=usdToKes?'Swap direction (KES → USD)':'Swap direction (USD → KES)';update();
+  };
+
+  /* ---- withdrawal ---- */
+  function quote(){
+    var a=num($('wamt'));
+    if(!a){$('wout').value='—';return}
+    $('wout').value=method==='crypto'?(a.toFixed(2)+' '+$('coin').value+' (est.)'):('KSh '+fmt(a*num($('rate'))));
+  }
+  var segBtns=document.querySelectorAll('[data-m]');
+  Array.prototype.forEach.call(segBtns,function(b){
+    b.onclick=function(){
+      method=b.getAttribute('data-m');
+      Array.prototype.forEach.call(segBtns,function(x){x.classList.toggle('on',x===b)});
+      ['mpesa','bank','crypto'].forEach(function(m){$('f-'+m).classList.toggle('hide',m!==method)});
+      $('wmsg').className='msg';quote();
+    };
+  });
+  $('wamt').oninput=quote;$('coin').onchange=quote;
+  function say(t,c){$('wmsg').className='msg '+c;$('wmsg').textContent=t}
+  $('wbtn').onclick=function(){
+    var a=num($('wamt')),desc;
+    if(!a)return say('Enter an amount to withdraw.','err');
+    if(a>bal)return say('That is more than your available balance ($'+fmt(bal)+').','err');
+    if(method==='mpesa'){
+      var p=$('phone').value.replace(/\s+/g,'');
+      if(!/^(?:\+?254|0)?[71]\d{8}$/.test(p))return say('Enter a valid Kenyan M-Pesa number.','err');
+      desc='Withdrawal to M-Pesa ••• '+p.slice(-4);
+    }else if(method==='bank'){
+      var acc=$('bacc').value.trim();
+      if(acc.length<6)return say('Enter a valid account number.','err');
+      desc='Withdrawal to '+$('bname').value+' •••• '+acc.slice(-4);
+    }else{
+      var ad=$('addr').value.trim();
+      if(ad.length<20)return say('Enter a valid wallet address.','err');
+      desc='Withdrawal to '+$('coin').value+' wallet '+ad.slice(0,4)+'…'+ad.slice(-4);
+    }
+    bal=Math.round((bal-a)*100)/100;
+    ledger.unshift({t:'out',d:desc,a:a,date:new Date(),pending:true});
+    render();update();
+    $('wamt').value='';quote();
+    say('Withdrawal of $'+fmt(a)+' submitted (demo). No real money moved.','ok');
+  };
+
+  render();$('amt').value=bal;update();
+})();
+</script>
+</body>
+</html>
